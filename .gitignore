@@ -1,0 +1,12 @@
+# Ignorisanje fajlova specifičnih za PyCharm
+.idea/
+
+# Ignorisanje virtuelnog okruženja (venv)
+venv/
+
+# Ignorisanje ML fajlova i izlaza
+*.h5
+*.pth
+*.pt
+/izveštaji/
+/temp_frames/
