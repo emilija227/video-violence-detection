@@ -40,7 +40,7 @@ def main():
         detections = ml_model_handler.detect_violence(frame)
 
         if detections:
-            print(f"🚨 NASILJE DETEKTOVANO u frejmu {frame_id} @ {time_display}s | Broj incidenata: {len(detections)}")
+            print(f"NASILJE DETEKTOVANO u frejmu {frame_id} u {time_display} s | Broj incidenata: {len(detections)}")
 
         for det in detections:
             [xmin, ymin, xmax, ymax] = det['box']
