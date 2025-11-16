@@ -34,18 +34,41 @@ class VideoHandler:
             "Duration (s)": round(self.duration_seconds, 2)
         }
 
-    def get_frame(self, frame_index):
-        if not self.is_open:
+    def get_frame(self):
+        if self.cap is None or not self.cap.isOpened():
             return None
-        self.cap.set(cv2.CAP_PROP_POS_FRAMES, frame_index) #psotavljam citac na poziciju koju proslijedim
-        ret, frame = self.cap.read() # desno od = je funkcija koja zapravo cita frejm na toj poziciji
-        return frame if ret else None
 
-    def close(self):
-        if self.is_open:
+        ret, frame = self.cap.read()
+
+        if not ret:
+            return None
+
+        return frame
+
+    def get_frame_count(self):
+        """Vraća indeks trenutno pročitanog frejma (koristi ga OpenCV)."""
+        if self.cap is None:
+            return 0
+        # CAP_PROP_POS_FRAMES vraća indeks frejma koji će biti obrađen SLEDEĆI
+        # Stoga oduzimamo 1 da bismo dobili indeks upravo obrađenog frejma.
+        return int(self.cap.get(cv2.CAP_PROP_POS_FRAMES)) - 1
+
+    def get_timestamp_ms(self):
+        """Vraća vreme trenutnog frejma u milisekundama (koristi ga OpenCV)."""
+        if self.cap is None:
+            return 0
+        return self.cap.get(cv2.CAP_PROP_POS_MSEC)
+
+    def get_fps(self):
+        """Vraća broj frejmova u sekundi (FPS) videa."""
+        if self.cap is None:
+            return 0
+        return self.cap.get(cv2.CAP_PROP_FPS)
+
+    def release(self):
+        """Oslobađa video objekat (zatvara video fajl)."""
+        if self.cap is not None:
             self.cap.release()
-            self.is_open = False
-            print(f"Video zatvoren: {self.video_path}")
 
 
 if __name__ == '__main__':
