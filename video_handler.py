@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+#Pravim klasu pomocu koje otvaram video i izvlacim njegove metapodatke
 class VideoHandler:
     def __init__(self, video_path):
         self.video_path = video_path
@@ -16,12 +17,12 @@ class VideoHandler:
         else:
             self._extract_metadata()
 
-    def _extract_metadata(self):    #citanje metapodataka
-        self.fps = self.cap.get(cv2.CAP_PROP_FPS)
-        self.frame_counter = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        self.duration_seconds = self.frame_counter / self.fps if self.fps > 0 else 0
+    def _extract_metadata(self):    #Citanje metapodataka, koristim funkcije iz OpenCV-a
+        self.fps = self.cap.get(cv2.CAP_PROP_FPS)   #Broj frejmova u sekundi
+        self.frame_counter = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))    #Ukupan broj frejmova u videu
+        self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))            #Rezolucija
+        self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))          #Rezolucija
+        self.duration_seconds = self.frame_counter / self.fps if self.fps > 0 else 0    #Ukupan broj frejmova / FPS, if da izbjegnem dijeljenje s nulom
 
     def get_metadata(self):
         #Vracam podatke kao rjecnik
@@ -38,61 +39,31 @@ class VideoHandler:
         if self.cap is None or not self.cap.isOpened():
             return None
 
-        ret, frame = self.cap.read()
+        ret, frame = self.cap.read()    #ret govori da li je citanje bilo uspjesno, frame je sama slika tj numpy niz
 
         if not ret:
             return None
 
         return frame
 
-    def get_frame_count(self):
-        """Vraća indeks trenutno pročitanog frejma (koristi ga OpenCV)."""
+    def get_frame_count(self): #Vraca indeks trenutno procitanog frejma
         if self.cap is None:
             return 0
-        # CAP_PROP_POS_FRAMES vraća indeks frejma koji će biti obrađen SLEDEĆI
-        # Stoga oduzimamo 1 da bismo dobili indeks upravo obrađenog frejma.
-        return int(self.cap.get(cv2.CAP_PROP_POS_FRAMES)) - 1
 
-    def get_timestamp_ms(self):
-        """Vraća vreme trenutnog frejma u milisekundama (koristi ga OpenCV)."""
+        return int(self.cap.get(cv2.CAP_PROP_POS_FRAMES)) - 1
+    #CAP_PROP_POS_FRAMES vraca indeks sljedeceg frejma pa moramo da oduzmemo 1
+
+    def get_timestamp_ms(self): #Vraca vremenski trenutak trenutnog frejma u ms
         if self.cap is None:
             return 0
+
         return self.cap.get(cv2.CAP_PROP_POS_MSEC)
 
-    def get_fps(self):
-        """Vraća broj frejmova u sekundi (FPS) videa."""
+    def get_fps(self): #U slucaju da mi zatreba fps
         if self.cap is None:
             return 0
         return self.cap.get(cv2.CAP_PROP_FPS)
 
-    def release(self):
-        """Oslobađa video objekat (zatvara video fajl)."""
+    def release(self): #Zatvaram video, oslobadjam resurse
         if self.cap is not None:
             self.cap.release()
-
-
-if __name__ == '__main__':
-    # MORATE PROMENITI OVU PUTANJU NA VAŠ TEST VIDEO!
-    TEST_VIDEO_PATH = r"C:\Users\emili\Videos\4K Video Downloader+\Short animation (no sound).mp4"
-    #TEST_VIDEO_PATH = r"C:\Users\emili\PycharmProjects\praksa\Short animation (no sound) [dj3MA88qa3c].mp4"
-
-    handler = VideoHandler(TEST_VIDEO_PATH)
-
-    if handler.is_open:
-        print("--- METAPODACI ---")
-        print(handler.get_metadata())
-
-        # Testiranje čitanja frejma
-        frame_50 = handler.get_frame(50)
-
-        if frame_50 is not None:
-            print("\n--- TEST ČITANJA FREJMA ---")
-            print(f"Uspešno pročitan frejm 50. Dimenzije: {frame_50.shape}, Tip: {frame_50.dtype}")
-            # Prikaz frejma (Opcija, ovo je sporije za testiranje)
-            # cv2.imshow('Frejm 50', frame_50)
-            # cv2.waitKey(0) # Čeka dok se ne pritisne taster
-            # cv2.destroyAllWindows()
-        else:
-            print("GREŠKA: Nije moguće pročitati frejm 50.")
-
-    handler.close()
