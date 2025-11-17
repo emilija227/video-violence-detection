@@ -7,11 +7,11 @@ from video_handler import VideoHandler
 from ml_model_handler import MLModelHandler
 
 test_video_path = r"C:\Users\emili\Videos\4K Video Downloader+\Superhero fighting editing in Capcut in Hindi   Superman vs General zod   video editing tutorial.mp4"
-violence_color = (0,0,255)
+violence_color = (0,0,255) #Crvena boja za detekciju nasilja
 
 def main():
     if not os.path.exists(test_video_path):
-        print(f"FATALNA GREŠKA: Video nije pronađen: {test_video_path}")
+        print("GREŠKA: Video nije pronađen")
         print("Ažurirajte test_video_path na ispravnu putanju.")
         return
 
@@ -19,12 +19,12 @@ def main():
     ml_model_handler = MLModelHandler()
 
     if ml_model_handler.model is None:
-        print("Neuspešno učitavanje ML modela. Prekidanje izvršavanja.")
+        print("Neuspješno učitavanje ML modela. Prekidanje izvršavanja.")
         return
 
-    print("\n--- Početak obrade videa ---")
+    print("\nPočetak obrade videa")
 
-    while True:
+    while True: #Sve dok ima frejmova za citanje
         frame = video_handler.get_frame()
         if frame is None:
             break
@@ -37,11 +37,12 @@ def main():
         seconds = timestamp_sec % 60
         time_display = f"{minutes:02}:{seconds:05.2f}"
 
-        detections = ml_model_handler.detect_violence(frame)
+        detections = ml_model_handler.detect_violence(frame) #Proslijedim frejm YOLO modelu i dobijam nazad listu detekcije nasilja
 
         if detections:
             print(f"NASILJE DETEKTOVANO u frejmu {frame_id} u {time_display} s | Broj incidenata: {len(detections)}")
 
+        #Iscrtava detekcione kutije na frejmu
         for det in detections:
             [xmin, ymin, xmax, ymax] = det['box']
             score = det['score']
@@ -62,7 +63,7 @@ def main():
 
     video_handler.release()
     cv2.destroyAllWindows()
-    print("\n--- Obrada videa završena. ---")
+    print("\nObrada videa završena.")
 
 if __name__ == '__main__':
     main()
