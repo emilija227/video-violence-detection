@@ -24,6 +24,9 @@ def main():
 
     print("\nPočetak obrade videa")
 
+    frames_to_skip = 2
+    last_known_detections = []
+
     while True: #Sve dok ima frejmova za citanje
         frame = video_handler.get_frame()
         if frame is None:
@@ -37,7 +40,11 @@ def main():
         seconds = timestamp_sec % 60
         time_display = f"{minutes:02}:{seconds:05.2f}"
 
-        detections = ml_model_handler.detect_violence(frame) #Proslijedim frejm YOLO modelu i dobijam nazad listu detekcije nasilja
+        if frame_id % frames_to_skip == 0:
+            detections = ml_model_handler.detect_violence(frame) #Proslijedim frejm YOLO modelu i dobijam nazad listu detekcije nasilja
+            last_known_detections = detections
+        else:
+            detections = last_known_detections
 
         if detections:
             print(f"NASILJE DETEKTOVANO u frejmu {frame_id} u {time_display} s | Broj incidenata: {len(detections)}")
