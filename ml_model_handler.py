@@ -25,7 +25,7 @@ class MLModelHandler:
         if self.model is None or frame_array is None:
             return []
 
-        results = self.model.predict(frame_array, conf=0.5, iou=0.5, verbose=False) #Pokrecem YOLO algoritam na datom frejmu
+        results = self.model.predict(frame_array, conf=0.6, iou=0.5, verbose=False) #Pokrecem YOLO algoritam na datom frejmu
         #Prag detekcije 50%
         #iou rjesava problem detekcije istog objekta vise puta
         #verbose na False da YOLO ne bi ispisivao tehnicke poruke
