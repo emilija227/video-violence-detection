@@ -6,7 +6,7 @@ import math
 from video_handler import VideoHandler
 from ml_model_handler import MLModelHandler
 
-test_video_path = r"C:\Users\emili\Videos\4K Video Downloader+\Facial expressions test.mp4"
+test_video_path = r"C:\Users\emili\Videos\4K Video Downloader+\whos got the best scream (not mine btw just sharing).mp4"
 violence_color = (0, 0, 255)  # Crvena boja za detekciju nasilja
 
 MAX_DISPLAY_HEIGHT = 800
@@ -26,7 +26,7 @@ def main():
 
     print("\nPočetak obrade videa")
 
-    frames_to_skip = 2
+    frames_to_skip = 4
     last_known_detections = []
     # violence_in_previous_frame = False
 
