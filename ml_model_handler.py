@@ -3,16 +3,14 @@ import numpy as np
 
 class MLModelHandler:
     def __init__(self, model_path):
-        """Učitava 3D CNN model iz .h5 fajla."""
+        #Ucitava 3D CNN model iz .h5 fajla.
         self.model_path = model_path
         self.model = self._load_model()
-        # Klase modela (0 za NonFight, 1 za Fight) - ISPREDENA KLASA
-        self.classes = ['NonFight', 'Fight']
+        self.classes = ['NonFight', 'Fight'] #[0,1]
 
     def _load_model(self):
-        """Pokušava da učita Keras model."""
+        #Ucitavam model
         try:
-            # Učitavanje celog modela
             model = tf.keras.models.load_model(self.model_path)
             print(f"Model uspešno učitan: {self.model_path}")
             return model
@@ -22,11 +20,6 @@ class MLModelHandler:
             return None
 
     def predict(self, clip):
-        """
-        Vrši predikciju na klipu frejmova.
-        :param clip: Numpy array, dimenzije (64, 224, 224, 3)
-        :return: Tekstualna labela ('Fight' ili 'NonFight') i verovatnoća (float)
-        """
         if self.model is None:
             return "ERROR: Model nije učitan", 0.0
 
