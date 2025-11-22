@@ -7,7 +7,7 @@ class VideoHandler:
     TARGET_RES = (224, 224)
 
     def __init__(self, video_path):
-        self.cap = cv2.VideoCapture(video_path)  # Inicijalizuje video čitač i postavlja parametre klipa.
+        self.cap = cv2.VideoCapture(video_path)   #Inicijalizuje video čitač i postavlja parametre klipa.
         self.clip = []  # Lista za čuvanje tekuće sekvence frejmova (Sliding Window)
 
         if not self.cap.isOpened():
