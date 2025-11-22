@@ -10,3 +10,5 @@ venv/
 *.pt
 /izveštaji/
 /temp_frames/
+
+ffmpeg_instalacija/
