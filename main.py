@@ -3,14 +3,10 @@ import os
 from ml_model_handler import MLModelHandler
 from video_handler import VideoHandler
 
-VIDEO_PATH = r"C:\Users\emili\Videos\4K Video Downloader+\The Best Uppercut KO Of All Time.mp4"
-
+VIDEO_PATH = r"C:\Users\emili\Videos\4K Video Downloader+\Man Who Killed Victim With Single Punch Jailed CCTV.mp4"
 MODEL_PATH = os.path.join('models', 'fight_detection_model.h5')
-
 CONFIDENCE_THRESHOLD = 0.80
-
 FRAME_SKIP = 2 #Ubrzavam, predikcija se vrsi na svakom (frame_skip+1) frejmu
-
 
 def run_prediction():
     # 1. Inicijalizacija modela
@@ -51,10 +47,10 @@ def run_prediction():
     #Položaj teksta
     TEXT_X = int(DISPLAY_DIMS[0] * 0.02)
     TEXT_Y = int(DISPLAY_DIMS[1] * 0.07)
-    # --- KRAJ PODEŠAVANJA ---
+
 
     # Inicijalizacija varijabli za detekciju
-    current_label = "Cekanje na klip (64 frejma)..."
+    current_label = "Cekanje na klip (64 frejma)"
     current_confidence = 0.0
     frames_read_counter = 0
 
@@ -75,10 +71,10 @@ def run_prediction():
         #Dodajemo frejm u klizni prozor
         clip = video_handler.get_sliding_window(processed_frame_model)
 
-        # 4. Predikcija: Vrši se tek kada je klip pun i ISTEKNE BROJAČ
-        #Time se smanjuje broj poziva TensorFlow-u i ubrzava video
+        # 4. Predikcija: Vrši se tek kada je stiglo do 64 frejma i ako je treci frejm
+        # Time se smanjuje broj poziva TensorFlow-u i ubrzava video
         if clip is not None and frames_read_counter % (FRAME_SKIP + 1) == 0:
-            label, confidence = model_handler.predict(clip)
+            label, confidence = model_handler.predict(clip) #Vrsi predikciju na klipu
 
             #LOGIKA DETEKCIJE SA PRAGOM
             if label == 'Fight' and confidence >= CONFIDENCE_THRESHOLD:
@@ -88,7 +84,7 @@ def run_prediction():
                 current_label = 'NonFight'
                 current_confidence = confidence
 
-        # 5. Prikazivanje Frejma i Rezultata (Prikaz se dešava na SVAKOM frejmu)
+        # 5. Prikazivanje frejma i rezultata (Prikaz se dešava na SVAKOM frejmu)
 
         #Povećavanje frejma koristeći dinamički izračunate dimenzije
         display_frame = cv2.resize(frame_for_display, DISPLAY_DIMS, interpolation=cv2.INTER_LINEAR)
@@ -112,7 +108,7 @@ def run_prediction():
     #Oslobađanje resursa
     video_handler.release()
     cv2.destroyAllWindows()
-    print("--- Detekcija završena. ---")
+    print("Detekcija završena.")
 
 
 if __name__ == "__main__":
