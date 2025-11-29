@@ -15,6 +15,8 @@ class MLModelHandler:
             print(f"Model uspešno učitan: {self.model_path}")
             return model
         except Exception as e:
+            print("Udjoh")
+            print(e)
             print(
                 f"Greška pri učitavanju modela {self.model_path}. Proverite da li je TensorFlow instaliran i da li je putanja do .h5 fajla tačna. Greška: {e}")
             return None
