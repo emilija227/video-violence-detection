@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import os
 import math
-
+import customtkinter as ctk
 from video_handler import VideoHandler
 from ml_model_handler import MLModelHandler
 
@@ -95,4 +95,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    root = ctk.CTk()
+    root.title('Aplikacija za detekciju nasilja na video snimcima')
+    root.geometry('900x800')
+    root.mainloop()
