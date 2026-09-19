@@ -1,7 +1,8 @@
 # Ignorisanje fajlova specifičnih za PyCharm
 .idea/
 
-# Ignorisanje virtuelnog okruženja (venv)
+# Ignorisanje modela i virtuelnog okruženja (venv)
+models/
 venv/
 
 # Ignorisanje ML fajlova i izlaza
